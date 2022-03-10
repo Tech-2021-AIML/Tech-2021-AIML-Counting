@@ -1,14 +1,18 @@
+import sqlalchemy as db
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from urllib.parse import quote_plus as urlquote
 
-engine = create_engine('mysql+pymysql://black:tikur@localhost/count')
+
+engine = create_engine('mysql+pymysql://root:%s@localhost/count'%urlquote('root'), echo=True, future=True)
 # use session_factory() to get a new Session
 _SessionFactory = sessionmaker(bind=engine)
 
 Base = declarative_base()
 
-
+def getConnection():
+    return engine.connect()
 def session_factory():
     Base.metadata.create_all(engine)
     return _SessionFactory()

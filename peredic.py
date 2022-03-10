@@ -6,8 +6,10 @@ redis_client = redis.Redis(host='localhost', port=6379, decode_responses=True)
 import csv
 import os
 from datetime import datetime 
-# from db import  session_factory
-# import infer
+import db
+from db import  session_factory
+import infer
+import sqlalchemy as sqldb
 app = Celery(
     # XXX The below 'myapp' is the name of this module, for generating
     # task names when executed as __main__.
@@ -71,12 +73,13 @@ def send_count_from_bus(bus_id):
     now = datetime.now() 
     # get current second
     sec = now.second - now.second % 5
-    # count =my_predict(f'img/bus/1/img_1_2022-03_15.jpg')
+    count=my_predict('test_images/capture/image_{secF}.jpg'.format(secF=sec))
     # sava this pridiction to db cont table Bus columns station , routes, currernt_count
-
-    
-
-    pass
+    connection = db.getConnection()
+    query = sqldb.update(bus).values(currernt_cout=count)
+    query = query.where(bus.columns.id==bus_id)
+    connection.execute(query)
+    return results
 
 @app.task
 def send_photo_from_station(sett):
@@ -91,25 +94,28 @@ def send_photo_from_station(sett):
 @app.task
 def send_count_from_station(station_id):
     #  from database get all routes in that sation save it routes variable
-    routes = []
+    connection = db.getConnection()
+    query = sqldb.select([route_station.columns.route_id]).where(route_station.columns.station_id==station_id)
+    routes = connection.execute(query)
     now = datetime.now() 
     # get current second
     sec = now.second - now.second % 5
     sec = sec-5
-    for r in  route_tuple[station_id]:
+    for r in  routes:
         img_path_now = f'img/croped/station/{station_id}/{r}/{str(now)[0:-12]}_{str(sec)}_boader.jpg'
         img_path_now ='img/croped/station/2/R1/2022-03_5.jpg'
         if os.path.exists(img_path_now):
             count =my_predict(img_path_now)
             # sava this pridiction to db cont table Route_station columns station , routes, currernt_count
+            query = sqldb.update(route_station).values(currernt_cout=count)
+            query = query.where(route_station.columns.station_id==station_id)
+            connection.execute(query)
             print(f'count      00  {count}')    
     print('send-c-f-s')
 
-    pass
 @app.task
-def send_location_from_bus():
+def send_location_from_bus(bus_id):
     # call get location python api
-    # save to db count table bus culumns latitude and logtiude 
  
     # calling the Nominatim tool
     loc = Nominatim(user_agent="GetLoc")
@@ -122,7 +128,12 @@ def send_location_from_bus():
 
     # printing latitude and longitude
     print("Latitude = ", getLoc.latitude, "Longitude = ", getLoc.longitude)
-    pass
+    # save to db count table bus culumns latitude and logtiude 
+    connection = db.getConnection()
+    query = sqldb.update(bus).values(latitude=getLoc.latitude, longitude=getLoc.longitude)
+    query = query.where(bus.columns.id==bus_id)
+    connection.execute(query)
+
 
 
 @app.on_after_configure.connect
