@@ -1,3 +1,4 @@
+from pickle import NONE
 import yaml
 import cv2 
 
@@ -10,9 +11,12 @@ if isinstance('config/station_cam.yaml', str):  # *.yaml file
 def crop_img(station_id , now ,sec):
     print('ok')
     for i ,r in enumerate(cam_conf['cams'][station_id]['route']):
-        img = cv2.imread(f'img/station/{station_id}/image_{station_id}_{str(now)[0:-12]}_{str(sec)}.jpg')
-        croped_img = img[0:100, 0:200]
-        cv2.imwrite(f'img/croped/station/{station_id}/{r}/{str(now)[0:-12]}_{str(sec)}.jpg', croped_img)
+        img_path = f'img/station/{station_id}/image_{station_id}_{str(now)[0:-12]}_{str(sec)}.jpg'
+        img = cv2.imread(img_path)
+        if os.path.exists(img_path):
+            crop_axis = cam_conf['cams'][station_id]['crop_conf'][i]
+            croped_img = img[crop_axis[0]:crop_axis[2],crop_axis[1]:crop_axis[3]]
+            cv2.imwrite(f'img/croped/station/{station_id}/{r}/{str(now)[0:-12]}_{str(sec)}.jpg', croped_img)
 
 import os
 def no_file(Bus , bus_id,station_id,sec,now):
@@ -26,12 +30,3 @@ def no_file(Bus , bus_id,station_id,sec,now):
         return True
 
 
-# {route:['R1'],  crop_conf:[(0,0),(110,110)]},
-#     {route:['R1'],  crop_conf:[(0,0),(110,110)]},
-#     {route:['R2'],  crop_conf:[(0,0),(110,110)]},
-#     {route:['R2'],  crop_conf:[(0,0),(110,110)]},
-#     {route:['R2'],  crop_conf:[(0,0),(110,110)]},
-#     {route:['R3'],  crop_conf:[(0,0),(110,110)]},
-#     {route:['R3'],  crop_conf:[(0,0),(110,110)]},
-#     {route:['R3'],  crop_conf:[(0,0),(110,110)]},
-#     {route:['R1','1R','R3'}

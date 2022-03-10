@@ -8,7 +8,7 @@ import datetime
 # params
 Bus = False
 bus_id = 1
-station_id = 2
+station_id = 10
 
 
 def get_every_T_sec(cam, T):
