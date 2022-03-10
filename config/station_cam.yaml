@@ -1,17 +1,54 @@
 cams:
   [
     {},
-    { route: ["R1"], crop_conf: [[0, 0, 110, 110]] },
-    { route: ["R1"], crop_conf: [[0, 0, 110, 110]] },
-    { route: ["R1"], crop_conf: [[0, 0, 110, 110]] },
-    { route: ["R2"], crop_conf: [[0, 0, 110, 110]] },
-    { route: ["R2"], crop_conf: [[0, 0, 110, 110]] },
-    { route: ["R2"], crop_conf: [[0, 0, 110, 110]] },
-    { route: ["R3"], crop_conf: [[0, 0, 110, 110]] },
-    { route: ["R3"], crop_conf: [[0, 0, 110, 110]] },
-    { route: ["R3"], crop_conf: [[0, 0, 110, 110]] },
+    {
+      route: ["R1"],
+      crop_conf: [[0, 0, 110, 110]],
+      border_conf: [[30, 40, 50, 60]],
+    },
+    {
+      route: ["R1"],
+      crop_conf: [[0, 0, 110, 110]],
+      border_conf: [[30, 40, 50, 60]],
+    },
+    {
+      route: ["R1"],
+      crop_conf: [[0, 0, 110, 110]],
+      border_conf: [[30, 40, 50, 60]],
+    },
+    {
+      route: ["R2"],
+      crop_conf: [[0, 0, 110, 110]],
+      border_conf: [[30, 40, 50, 60]],
+    },
+    {
+      route: ["R2"],
+      crop_conf: [[0, 0, 110, 110]],
+      border_conf: [[30, 40, 50, 60]],
+    },
+    {
+      route: ["R2"],
+      crop_conf: [[0, 0, 110, 110]],
+      border_conf: [[30, 40, 50, 60]],
+    },
+    {
+      route: ["R3"],
+      crop_conf: [[0, 0, 110, 110]],
+      border_conf: [[30, 40, 50, 60]],
+    },
+    {
+      route: ["R3"],
+      crop_conf: [[0, 0, 110, 110]],
+      border_conf: [[30, 40, 50, 60]],
+    },
+    {
+      route: ["R3"],
+      crop_conf: [[0, 0, 110, 110]],
+      border_conf: [[30, 40, 50, 60]],
+    },
     {
       route: ["R3", "R2", "R1"],
       crop_conf: [[0, 0, 110, 110], [90, 70, 210, 210], [98, 60, 310, 310]],
+      border_conf: [[30, 40, 50, 60], [30, 40, 50, 60], [30, 40, 50, 60]],
     },
   ]
