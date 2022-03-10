@@ -1,4 +1,4 @@
-
+from geopy.geocoders import Nominatim
 from celery import Celery
 from pandas import infer_freq
 import redis
@@ -110,7 +110,18 @@ def send_count_from_station(station_id):
 def send_location_from_bus():
     # call get location python api
     # save to db count table bus culumns latitude and logtiude 
+ 
+    # calling the Nominatim tool
+    loc = Nominatim(user_agent="GetLoc")
 
+    # entering the location name
+    getLoc = loc.geocode("Location")
+
+    # printing address
+    print(getLoc.address)
+
+    # printing latitude and longitude
+    print("Latitude = ", getLoc.latitude, "Longitude = ", getLoc.longitude)
     pass
 
 
