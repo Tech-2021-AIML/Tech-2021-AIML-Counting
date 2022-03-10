@@ -127,4 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+# custom
 weights/
+img/
+test_images/
+celerybeat-schedule.*

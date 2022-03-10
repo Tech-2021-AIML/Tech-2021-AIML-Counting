@@ -1,0 +1,7 @@
+cams:
+  [
+    {},
+    { route: ["R1"], crop_conf: [( 0, 0, 110, 110)] },
+    { route: ["R1"], crop_conf: [( 0, 0, 110, 110)] },
+    { route: ["R1"], crop_conf: [( 0, 0, 110, 110)] },
+  ]

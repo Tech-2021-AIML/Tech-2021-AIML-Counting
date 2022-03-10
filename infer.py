@@ -72,33 +72,15 @@ def getPridiction(image):
     #plt.imshow(temp_1,cmap = c.jet)
     print("Original Count : ",int(np.sum(temp_1)) + 1)
 
-# Video source - can be camera index number given by 'ls /dev/video*
-# or can be a video file, e.g. '~/Video.avi'
-# cap = cv2.VideoCapture(0)
-
-# while(True):
-#     # Capture frame-by-frame
-#     ret, frame = cap.read()
-#     # Our operations on the frame come here
-#     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-#     # Display the resulting frame
-#     cv2.imshow('frame',gray)
-#     img_counter = 200
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
-#     while(True):
-#         img_name = "IMG_{}.png".format(img_counter)
-#         path = 'ShanghaiTech/part_A/test_data/images/'
-#         cv2.imwrite(os.path.join(path , img_name), frame)
-#         getPridiction(img_name)
-#         img_counter += 1
-#         time.sleep(10)
-        
-    
-
-# When everything done, release the capture
-# cap.release()
-# cv2.destroyAllWindows()
 
 getPridiction('000.jpg')
+
+
+
+def my_predict(path):
+    #Function to load image,predict heat map, generate count and return (count , image , heat map)
+    model = load_model()#加载模型
+    image = create_img(path)#图像预处理
+    ans =   model.predict(image)#预测数据
+    count = np.sum(ans)
+    return ans
