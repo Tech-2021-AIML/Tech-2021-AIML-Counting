@@ -4,8 +4,9 @@ from pandas import infer_freq
 import redis
 redis_client = redis.Redis(host='localhost', port=6379, decode_responses=True)
 import csv
-import datetime
-from db import  session_factory
+import os
+from datetime import datetime 
+# from db import  session_factory
 # import infer
 app = Celery(
     # XXX The below 'myapp' is the name of this module, for generating
@@ -16,8 +17,8 @@ app = Celery(
     # backend='rpc'
 )
 bus = False
-station_id = ''
-bus_id = ''
+station_id = 2
+bus_id = 2
 
 import cv2
 app.conf.timezone = 'UTC'
@@ -67,10 +68,10 @@ def send_photo_from_bus(sett):
     pass
 @app.task
 def send_count_from_bus(bus_id):
-    now = datetime.datetime.now() 
+    now = datetime.now() 
     # get current second
     sec = now.second - now.second % 5
-    count =my_predict(f'test_images/capture/image_{str(sec)}.jpg')
+    # count =my_predict(f'img/bus/1/img_1_2022-03_15.jpg')
     # sava this pridiction to db cont table Bus columns station , routes, currernt_count
 
     
@@ -87,19 +88,21 @@ def send_photo_from_station(sett):
 
     pass
 
-from datetime import datetime
 @app.task
 def send_count_from_station(station_id):
     #  from database get all routes in that sation save it routes variable
-
     routes = []
-    now = datetime.datetime.now() 
+    now = datetime.now() 
     # get current second
     sec = now.second - now.second % 5
+    sec = sec-5
     for r in  route_tuple[station_id]:
-        count =my_predict(f'test_images/c/{station_id}/{r}/image_{str(sec)}.jpg')
-        # sava this pridiction to db cont table Route_station columns station , routes, currernt_count
-
+        img_path_now = f'img/croped/station/{station_id}/{r}/{str(now)[0:-12]}_{str(sec)}_boader.jpg'
+        img_path_now ='img/croped/station/2/R1/2022-03_5.jpg'
+        if os.path.exists(img_path_now):
+            count =my_predict(img_path_now)
+            # sava this pridiction to db cont table Route_station columns station , routes, currernt_count
+            print(f'count      00  {count}')    
     print('send-c-f-s')
 
     pass
@@ -120,8 +123,8 @@ def setup_periodic_tasks(sender, **kwargs):
         sender.add_periodic_task(4.0, send_count_from_bus.s('bus_id'))
     else:
     #     sender.add_periodic_task(4.0, send_photo_from_station.s('station_id'))
-        sender.add_periodic_task(4.0, send_count_from_station.s('station_id'))
-        sender.add_periodic_task(4.0, send_photo_from_station.s('station_id'))
+        sender.add_periodic_task(4.60, send_count_from_station.s(station_id))
+        sender.add_periodic_task(4.60, send_photo_from_station.s(station_id))
     #     # sender.add_periodic_task(4.0, infere.s(['hellosfa']), name='write 2')
     #     # See periodic tasks user guide for more examples:
     # # http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html

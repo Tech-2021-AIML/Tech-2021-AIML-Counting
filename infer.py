@@ -10,7 +10,7 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm as c
-from keras.models import model_from_json
+from tensorflow.keras.models import model_from_json
 import cv2
 import time
 import os
@@ -73,7 +73,7 @@ def getPridiction(image):
     print("Original Count : ",int(np.sum(temp_1)) + 1)
 
 
-getPridiction('000.jpg')
+# getPridiction('000.jpg')
 
 
 
