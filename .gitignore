@@ -129,6 +129,6 @@ dmypy.json
 .pyre/
 # custom
 weights/
-img/
+# img/
 test_images/
 celerybeat-schedule.*

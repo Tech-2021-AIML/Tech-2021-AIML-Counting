@@ -79,8 +79,8 @@ def getPridiction(image):
 
 def my_predict(path):
     #Function to load image,predict heat map, generate count and return (count , image , heat map)
-    model = load_model()#加载模型
-    image = create_img(path)#图像预处理
-    ans =   model.predict(image)#预测数据
+    model = load_model()
+    image = create_img(path)
+    ans =   model.predict(image)
     count = np.sum(ans)
-    return ans
+    return count
