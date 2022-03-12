@@ -45,7 +45,10 @@ def route_a_bus(starting_station, bus_id):
     result = session.execute(query)
     route = result.fetchall()
     most_crowded_route = -1
+    least_crowded_route = -1
     max_crowd = 0
+    min_crowd = 1000
+    crowd_threshold = 50
     for r in  route:
         #fetch all the all the statoins on each route
         mytable = configTable('route_station')
@@ -61,12 +64,19 @@ def route_a_bus(starting_station, bus_id):
         if sum_crowd > max_crowd:
             max_crowd = sum_crowd
             most_crowded_route = r
-    mytable_bus = configTable('bus')
-    session.query(mytable_bus)\
-    .filter(mytable_bus.columns.id==bus_id)\
-    .update({mytable_bus.columns.route_id : most_crowded_route[0]})
-    session.commit()
-    return most_crowded_route[1]
+        if sum_crowd < min_crowd:
+            min_crowd = sum_crowd
+            least_crowded_route = r
+        if (max_crowd - min_crowd) > crowd_threshold:
+            mytable_bus = configTable('bus')
+            session.query(mytable_bus)\
+            .filter(mytable_bus.columns.id==bus_id)\
+            .update({mytable_bus.columns.route_id : most_crowded_route[0]})
+            session.commit()
+            return most_crowded_route[1]
+
+
+    
     
 @app.task
 def write_csv_hourly(sett):
@@ -126,14 +136,14 @@ def send_count_from_station(station_id):
     sec = now.second - now.second % 5
     sec = sec-5
     for r in  routes:
-        img_path_now = f'img/croped/station/{station_id}/{r[1]}/000.jpg'
+        img_path_now = f'img/station/{station_id}/{r[1]}/image_1.jpg'
         print(img_path_now)
         if os.path.exists(img_path_now):
             mytable_station = configTable('route_station')
             count =my_predict(img_path_now)
             # sava this pridiction to db cont table Route_station columns station , routes, currernt_count
             session.query(mytable_station)\
-            .filter(mytable_station.columns.station_id == station_id)\
+            .filter(mytable_station.columns.station_id == station_id,  mytable_station.columns.route_id == r[0])\
             .update({mytable_station.columns.current_count:count})
             print(session.query(mytable_station).all())
             session.commit()

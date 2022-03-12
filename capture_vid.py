@@ -3,6 +3,8 @@ from matplotlib.pyplot import get
 import cv2
 from util import crop_img, no_file
 import datetime
+import os
+from peredic import *
 
 
 # params
@@ -24,13 +26,21 @@ def get_every_T_sec(cam, T):
             ret, frame = cam.read()
             # save image
             if not Bus:
+                if os.path.exists(f'img/station/{station_id}/image_1.jpg'):
+                    os.remove(f'img/station/{station_id}/image_1.jpg')
                 cv2.imwrite(
-                    f'img/station/{station_id}/image_{station_id}_{str(now)[0:-12]}_{str(sec)}.jpg', frame)
+                    f'img/station/{station_id}/image_1.jpg', frame)
                 crop_img(station_id, now ,sec)
+                send_count_from_station.delay(station_id)
+
             # display image
             else:
+                if os.path.exists(f'img/station/{bus_id}/image_1.jpg'):
+                    os.remove(f'img/station/{bus_id}/image_1.jpg')
                 cv2.imwrite(
-                    f'img/bus/{bus_id}/img_{bus_id}_{str(now)[0:-12]}_{str(sec)}.jpg', frame)
+                    f'img/station/{bus_id}/image_1.jpg', frame)
+                send_count_from_bus.delay(bus_id)
+                send_location_from_bus(bus_id)
             cv2.imshow('frame', frame)
             # wait for 1ms
             if cv2.waitKey(1) & 0xFF == ord('q'):
