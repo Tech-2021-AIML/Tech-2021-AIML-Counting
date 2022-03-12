@@ -61,6 +61,11 @@ def route_a_bus(starting_station, bus_id):
         if sum_crowd > max_crowd:
             max_crowd = sum_crowd
             most_crowded_route = r
+    mytable_bus = configTable('bus')
+    session.query(mytable_bus)\
+    .filter(mytable_bus.columns.id==bus_id)\
+    .update({mytable_bus.columns.route_id : most_crowded_route[0]})
+    session.commit()
     return most_crowded_route[1]
     
 @app.task
