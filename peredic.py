@@ -35,6 +35,35 @@ bus_id = 2
 app.conf.timezone = 'UTC'
 
 @app.task
+def route_a_bus(starting_station, bus_id):
+    now = datetime.now().second
+    #fetch all the routs at that specific starting station
+    session = session_factory()
+    mytable = configTable('route')
+    query = session.query(mytable)\
+    .filter(mytable.columns.starting_station==starting_station)
+    result = session.execute(query)
+    route = result.fetchall()
+    most_crowded_route = -1
+    max_crowd = 0
+    for r in  route:
+        #fetch all the all the statoins on each route
+        mytable = configTable('route_station')
+        query = session.query(mytable)\
+        .filter(mytable.columns.route_id==r[0])
+        result = session.execute(query)
+        route_station = result.fetchall()
+        sum_crowd = 0
+        #sum the counts of each station on each route
+        for r_s in route_station:
+            sum_crowd += r_s[3]
+        #compare the summed count from the current maximum count
+        if sum_crowd > max_crowd:
+            max_crowd = sum_crowd
+            most_crowded_route = r
+    return most_crowded_route[1]
+    
+@app.task
 def write_csv_hourly(sett):
     # -7 sec
     # -10 min

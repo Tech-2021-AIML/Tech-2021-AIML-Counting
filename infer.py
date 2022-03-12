@@ -43,21 +43,11 @@ def create_img(path):
 
 def predict(path):
     #Function to load image,predict heat map, generate count and return (count , image , heat map)
-    model = load_model()#加载模型
-    image = create_img(path)#图像预处理
-    ans =   model.predict(image)#预测数据
+    model = load_model()
+    image = create_img(path)
+    ans =   model.predict(image)
     count = np.sum(ans)
     return count,image,ans
-
-"""
-ans,img,hmap = predict('ShanghaiTech/test_data/test_A_36.jpg')
-print("Predict Count:",ans)
-#Print count, image, heat map
-plt.imshow(img.reshape(img.shape[1],img.shape[2],img.shape[3]))
-plt.show()
-plt.imshow(hmap.reshape(hmap.shape[1],hmap.shape[2]) , cmap = c.jet )
-plt.show()
-"""
 
 def getPridiction(image):
     ans,img,hmap = predict('test_images/myimg/' + image)
