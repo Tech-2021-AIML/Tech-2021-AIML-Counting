@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Nov  4 11:11:52 2018
-
-@author: lenovo
-"""
 import cv2
 import h5py
 from PIL import Image
